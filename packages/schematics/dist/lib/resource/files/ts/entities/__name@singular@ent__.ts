@@ -38,14 +38,6 @@ export class <%= singular(classify(name)) %> extends BaseEntity {
 	// @ManyToOne(() => Category)
 	// category?: Category;
 
-	// If you need to set the relationship with the id of the other entity during creation.
-	// use the following. This is for ManyToOne and ManyToMany relations.
-	// make sure you use the format nameId. if not the system would not detect.
-	// you can use CFID or CFFID here.
-	// @CFID()
-	// categoryId?: string;
-
-
 	// This is a ManyToMany relation inside TypeORM (DB Side).
 	// This creates a virtual relation table.
 	// @JoinTable() is used to show the owner of the relation.
