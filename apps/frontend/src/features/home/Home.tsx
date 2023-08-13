@@ -1,21 +1,16 @@
 import { Container } from "@mantine/core";
 import React from "react";
-import { TodosQuery } from "../../__gen__/TodosQuery.graphql";
 import QueryFragContainer from "../_common/components/graphql-helpers/QueryFragContainer";
-import Todos, { todosQ } from "../todos/Todos";
+import Links, { linksQ } from "../links/Links";
+import { LinksQuery } from "../../__gen__/LinksQuery.graphql";
+import LinksPage from "../links/LinksPage";
 
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
 	return (
 		<>
-			<Container size="md">
-				<QueryFragContainer<TodosQuery>
-					query={todosQ}
-					variables={{ first: 50 }}
-					render={(data) => <Todos todoKey={data} categoryKey={data}></Todos>}
-				></QueryFragContainer>
-			</Container>
+			<LinksPage></LinksPage>
 		</>
 	);
 };

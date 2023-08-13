@@ -5,26 +5,17 @@ import { MercuriusDriver, MercuriusDriverConfig } from "@nestjs/mercurius";
 import { DateScalar } from "./_common/scalars/date.scalar";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "./user/user.module";
-import { TodoModule } from "./todo/todo.module";
-import { SubTaskModule } from "./sub-task/sub-task.module";
-import { CategoryModule } from "./category/category.module";
+import { LinkModule } from "./link/link.module";
+import { OwnerEntityModule } from "./owner-entity/owner-entity.module";
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({ envFilePath: [".env", ".env.dev", ".env.prod"], isGlobal: true, cache: true }),
 		TypeOrmModule.forRoot({
-			type: "mysql",
-			database: process.env.DATABASE_NAME ?? "universal_todo",
-			host: "localhost",
-			port: 3306,
-			username: process.env.DATABASE_USERNAME ?? "root",
-			password: process.env.DATABASE_PASSWORD ?? "root",
-			// type: "postgres",
-			// database: "test",
-			// port: 5432,
-			// username: "postgres",
-			// password: "kl;'",
+			type: "cockroachdb",
+			url: "postgresql://aiesec:syOLtb2_rITM0f9tkbBLrQ@asl-link-gen-test-2083.7s5.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full",
 			synchronize: true,
+			ssl: true,
 			autoLoadEntities: true,
 		}),
 		GraphQLModule.forRoot<MercuriusDriverConfig>({
@@ -42,10 +33,12 @@ import { CategoryModule } from "./category/category.module";
 			graphiql: false,
 			autoSchemaFile: "./../frontend/schema.graphql",
 		}),
-		UserModule,
-		TodoModule,
-		SubTaskModule,
-		CategoryModule,
+		// UserModule,
+		// TodoModule,
+		// SubTaskModule,
+		// CategoryModule,
+		LinkModule,
+		OwnerEntityModule,
 	],
 	controllers: [],
 	providers: [DateScalar],

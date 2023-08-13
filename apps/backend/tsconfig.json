@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"types": ["vitest/globals"],
+		// "types": ["vitest/globals"],
 		"module": "commonjs",
 		"declaration": true,
 		"removeComments": true,
@@ -20,3 +20,4 @@
 		"noFallthroughCasesInSwitch": false
 	}
 }
+

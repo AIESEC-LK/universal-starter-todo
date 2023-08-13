@@ -2,61 +2,47 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
+type OwnerEntity {
   id: ID!
   createdAt: Date!
   updatedAt: Date!
 
-  """User name"""
+  """Owner Entity"""
   name: String!
-
-  """User email"""
-  email: String!
-
-  """User AIESEC email"""
-  aiesecEmail: String
-
-  """User entity"""
-  entity: String!
-
-  """User role"""
-  role: String!
 }
 
-type DeleteManyResponse {
-  """The number of records deleted."""
-  deletedCount: Int!
+type Link {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+
+  """Link  name"""
+  name: String!
+  actualUrl: String!
+  redirectUrl: String!
+  entityId: ID!
+  approved: Boolean!
+  createdBy: String!
+  entity: OwnerEntity
 }
 
-type UserDeleteResponse {
+type LinkDeleteResponse {
   id: ID
   createdAt: Date
   updatedAt: Date
 
-  """User name"""
+  """Link  name"""
   name: String
-
-  """User email"""
-  email: String
-
-  """User AIESEC email"""
-  aiesecEmail: String
-
-  """User entity"""
-  entity: String
-
-  """User role"""
-  role: String
+  actualUrl: String
+  redirectUrl: String
+  entityId: ID
+  approved: Boolean
+  createdBy: String
 }
 
-type UpdateManyResponse {
-  """The number of records updated."""
-  updatedCount: Int!
-}
-
-type UserEdge {
-  """The node containing the User"""
-  node: User!
+type LinkEdge {
+  """The node containing the Link"""
+  node: Link!
 
   """Cursor for this node."""
   cursor: ConnectionCursor!
@@ -79,63 +65,53 @@ type PageInfo {
   endCursor: ConnectionCursor
 }
 
-type UserConnection {
+type LinkConnection {
   """Paging information"""
   pageInfo: PageInfo!
 
   """Array of edges."""
-  edges: [UserEdge!]!
+  edges: [LinkEdge!]!
 }
 
-type Category {
-  id: ID!
-  createdAt: Date!
-  updatedAt: Date!
+type OwnerEntityDeleteResponse {
+  id: ID
+  createdAt: Date
+  updatedAt: Date
 
-  """Category name"""
-  name: String!
-  description: String
+  """Owner Entity"""
+  name: String
 }
 
-type SubTask {
-  id: ID!
-  createdAt: Date!
-  updatedAt: Date!
+type OwnerEntityEdge {
+  """The node containing the OwnerEntity"""
+  node: OwnerEntity!
 
-  """SubTask name"""
-  name: String!
-
-  """SubTask done"""
-  done: Boolean!
-
-  """SubTask description"""
-  description: String!
-  todoId: ID!
-  categoryId: String
-  category: Category!
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
 }
 
-type Todo {
-  id: ID!
-  createdAt: Date!
-  updatedAt: Date!
+type OwnerEntityConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
 
-  """Todo name"""
-  name: String!
+  """Array of edges."""
+  edges: [OwnerEntityEdge!]!
+}
 
-  """Todo done"""
-  done: Boolean!
+"""Date custom scalar type"""
+scalar Date
 
-  """Todo description"""
-  description: String!
-  categoryId: ID
-  category: Category
-  subTasks(
+type Query {
+  link(
+    """The id of the record to find."""
+    id: ID!
+  ): Link!
+  links(
     """Limit or page results."""
     paging: CursorPaging = {first: 10}
 
     """Specify to filter the records returned."""
-    filter: SubTaskFilter = {}
+    filter: LinkFilter = {}
 
     """Paginate before opaque cursor"""
     before: ConnectionCursor
@@ -150,8 +126,34 @@ type Todo {
     last: Int
 
     """Specify to sort results."""
-    sorting: [SubTaskSort!] = []
-  ): TodoSubTasksConnection
+    sorting: [LinkSort!] = []
+  ): LinkConnection!
+  ownerEntity(
+    """The id of the record to find."""
+    id: ID!
+  ): OwnerEntity!
+  ownerEntities(
+    """Limit or page results."""
+    paging: CursorPaging = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: OwnerEntityFilter = {}
+
+    """Paginate before opaque cursor"""
+    before: ConnectionCursor
+
+    """Paginate after opaque cursor"""
+    after: ConnectionCursor
+
+    """Paginate first"""
+    first: Int
+
+    """Paginate last"""
+    last: Int
+
+    """Specify to sort results."""
+    sorting: [OwnerEntitySort!] = []
+  ): OwnerEntityConnection!
 }
 
 input CursorPaging {
@@ -168,20 +170,22 @@ input CursorPaging {
   last: Int
 }
 
-input SubTaskFilter {
-  and: [SubTaskFilter!]
-  or: [SubTaskFilter!]
-  id: SubTaskIdFilterComparison
+input LinkFilter {
+  and: [LinkFilter!]
+  or: [LinkFilter!]
+  id: LinkIdFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
-  name: SubTaskNameFilterComparison
-  done: BooleanFieldComparison
-  todoId: IDFilterComparison
-  categoryId: StringFieldComparison
-  category: SubTaskFilterCategoryFilter
+  name: StringFieldComparison
+  actualUrl: StringFieldComparison
+  redirectUrl: StringFieldComparison
+  entityId: IDFilterComparison
+  approved: BooleanFieldComparison
+  createdBy: StringFieldComparison
+  entity: LinkFilterOwnerEntityFilter
 }
 
-input SubTaskIdFilterComparison {
+input LinkIdFilterComparison {
   eq: ID
   in: [ID!]
 }
@@ -211,15 +215,21 @@ input DateFieldComparisonBetween {
   upper: DateTime!
 }
 
-input SubTaskNameFilterComparison {
-  is: Boolean
-  like: String
-  in: [String!]
-}
-
-input BooleanFieldComparison {
+input StringFieldComparison {
   is: Boolean
   isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
 }
 
 input IDFilterComparison {
@@ -239,57 +249,41 @@ input IDFilterComparison {
   notIn: [ID!]
 }
 
-input StringFieldComparison {
+input BooleanFieldComparison {
   is: Boolean
   isNot: Boolean
-  eq: String
-  neq: String
-  gt: String
-  gte: String
-  lt: String
-  lte: String
-  like: String
-  notLike: String
-  iLike: String
-  notILike: String
-  in: [String!]
-  notIn: [String!]
 }
 
-input SubTaskFilterCategoryFilter {
-  and: [SubTaskFilterCategoryFilter!]
-  or: [SubTaskFilterCategoryFilter!]
-  id: CategoryIdFilterComparison
+input LinkFilterOwnerEntityFilter {
+  and: [LinkFilterOwnerEntityFilter!]
+  or: [LinkFilterOwnerEntityFilter!]
+  id: OwnerEntityIdFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
-  name: CategoryNameFilterComparison
+  name: StringFieldComparison
 }
 
-input CategoryIdFilterComparison {
+input OwnerEntityIdFilterComparison {
   eq: ID
   in: [ID!]
 }
 
-input CategoryNameFilterComparison {
-  is: Boolean
-  like: String
-  in: [String!]
-}
-
-input SubTaskSort {
-  field: SubTaskSortFields!
+input LinkSort {
+  field: LinkSortFields!
   direction: SortDirection!
   nulls: SortNulls
 }
 
-enum SubTaskSortFields {
+enum LinkSortFields {
   id
   createdAt
   updatedAt
   name
-  done
-  todoId
-  categoryId
+  actualUrl
+  redirectUrl
+  entityId
+  approved
+  createdBy
 }
 
 """Sort Directions"""
@@ -304,405 +298,22 @@ enum SortNulls {
   NULLS_LAST
 }
 
-type TodoName {
-  id: ID!
-
-  """Todo name"""
-  name: String!
-}
-
-type TodoDeleteResponse {
-  id: ID
-  createdAt: Date
-  updatedAt: Date
-
-  """Todo name"""
-  name: String
-
-  """Todo done"""
-  done: Boolean
-
-  """Todo description"""
-  description: String
-  categoryId: ID
-}
-
-type TodoEdge {
-  """The node containing the Todo"""
-  node: Todo!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type TodoConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [TodoEdge!]!
-}
-
-type TodoAggregateGroupBy {
-  id: ID
-  createdAt: Date
-  updatedAt: Date
-  name: String
-  done: Boolean
-  categoryId: ID
-}
-
-type TodoCountAggregate {
-  id: Int
-  createdAt: Int
-  updatedAt: Int
-  name: Int
-  done: Int
-  categoryId: Int
-}
-
-type TodoMinAggregate {
-  id: ID
-  createdAt: Date
-  updatedAt: Date
-  name: String
-  categoryId: ID
-}
-
-type TodoMaxAggregate {
-  id: ID
-  createdAt: Date
-  updatedAt: Date
-  name: String
-  categoryId: ID
-}
-
-type TodoAggregateResponse {
-  groupBy: TodoAggregateGroupBy
-  count: TodoCountAggregate
-  min: TodoMinAggregate
-  max: TodoMaxAggregate
-}
-
-type SubTaskEdge {
-  """The node containing the SubTask"""
-  node: SubTask!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type TodoSubTasksConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SubTaskEdge!]!
-}
-
-type SubTaskDeleteResponse {
-  id: ID
-  createdAt: Date
-  updatedAt: Date
-
-  """SubTask name"""
-  name: String
-
-  """SubTask done"""
-  done: Boolean
-
-  """SubTask description"""
-  description: String
-  todoId: ID
-  categoryId: String
-}
-
-type SubTaskConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [SubTaskEdge!]!
-}
-
-type CategoryDeleteResponse {
-  id: ID
-  createdAt: Date
-  updatedAt: Date
-
-  """Category name"""
-  name: String
-  description: String
-}
-
-type CategoryEdge {
-  """The node containing the Category"""
-  node: Category!
-
-  """Cursor for this node."""
-  cursor: ConnectionCursor!
-}
-
-type CategoryConnection {
-  """Paging information"""
-  pageInfo: PageInfo!
-
-  """Array of edges."""
-  edges: [CategoryEdge!]!
-}
-
-"""Date custom scalar type"""
-scalar Date
-
-type Query {
-  user(
-    """The id of the record to find."""
-    id: ID!
-  ): User!
-  users(
-    """Limit or page results."""
-    paging: CursorPaging = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: UserFilter = {}
-
-    """Paginate before opaque cursor"""
-    before: ConnectionCursor
-
-    """Paginate after opaque cursor"""
-    after: ConnectionCursor
-
-    """Paginate first"""
-    first: Int
-
-    """Paginate last"""
-    last: Int
-
-    """Specify to sort results."""
-    sorting: [UserSort!] = []
-  ): UserConnection!
-  todoNames(todoName: String!): [TodoName]!
-  todoAggregate(
-    """Filter to find records to aggregate on"""
-    filter: TodoAggregateFilter
-  ): [TodoAggregateResponse!]!
-  todo(
-    """The id of the record to find."""
-    id: ID!
-  ): Todo!
-  todos(
-    """Limit or page results."""
-    paging: CursorPaging = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: TodoFilter = {}
-
-    """Paginate before opaque cursor"""
-    before: ConnectionCursor
-
-    """Paginate after opaque cursor"""
-    after: ConnectionCursor
-
-    """Paginate first"""
-    first: Int
-
-    """Paginate last"""
-    last: Int
-
-    """Specify to sort results."""
-    sorting: [TodoSort!] = []
-  ): TodoConnection!
-  subTask(
-    """The id of the record to find."""
-    id: ID!
-  ): SubTask!
-  subTasks(
-    """Limit or page results."""
-    paging: CursorPaging = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: SubTaskFilter = {}
-
-    """Paginate before opaque cursor"""
-    before: ConnectionCursor
-
-    """Paginate after opaque cursor"""
-    after: ConnectionCursor
-
-    """Paginate first"""
-    first: Int
-
-    """Paginate last"""
-    last: Int
-
-    """Specify to sort results."""
-    sorting: [SubTaskSort!] = []
-  ): SubTaskConnection!
-  category(
-    """The id of the record to find."""
-    id: ID!
-  ): Category!
-  categories(
-    """Limit or page results."""
-    paging: CursorPaging = {first: 10}
-
-    """Specify to filter the records returned."""
-    filter: CategoryFilter = {}
-
-    """Paginate before opaque cursor"""
-    before: ConnectionCursor
-
-    """Paginate after opaque cursor"""
-    after: ConnectionCursor
-
-    """Paginate first"""
-    first: Int
-
-    """Paginate last"""
-    last: Int
-
-    """Specify to sort results."""
-    sorting: [CategorySort!] = []
-  ): CategoryConnection!
-}
-
-input UserFilter {
-  and: [UserFilter!]
-  or: [UserFilter!]
-  id: UserIdFilterComparison
+input OwnerEntityFilter {
+  and: [OwnerEntityFilter!]
+  or: [OwnerEntityFilter!]
+  id: OwnerEntityIdFilterComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
-  name: UserNameFilterComparison
-  email: UserEmailFilterComparison
-  aiesecEmail: UserAiesecEmailFilterComparison
-  entity: UserEntityFilterComparison
-  role: UserRoleFilterComparison
+  name: StringFieldComparison
 }
 
-input UserIdFilterComparison {
-  eq: ID
-  in: [ID!]
-}
-
-input UserNameFilterComparison {
-  is: Boolean
-  like: String
-  in: [String!]
-}
-
-input UserEmailFilterComparison {
-  is: Boolean
-  like: String
-  in: [String!]
-}
-
-input UserAiesecEmailFilterComparison {
-  is: Boolean
-  like: String
-  in: [String!]
-}
-
-input UserEntityFilterComparison {
-  is: Boolean
-  in: [String!]
-}
-
-input UserRoleFilterComparison {
-  is: Boolean
-  in: [String!]
-}
-
-input UserSort {
-  field: UserSortFields!
+input OwnerEntitySort {
+  field: OwnerEntitySortFields!
   direction: SortDirection!
   nulls: SortNulls
 }
 
-enum UserSortFields {
-  id
-  createdAt
-  updatedAt
-  name
-  email
-  aiesecEmail
-  entity
-  role
-}
-
-input TodoAggregateFilter {
-  and: [TodoAggregateFilter!]
-  or: [TodoAggregateFilter!]
-  id: TodoIdFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  name: TodoNameFilterComparison
-  done: BooleanFieldComparison
-  categoryId: IDFilterComparison
-}
-
-input TodoIdFilterComparison {
-  eq: ID
-  in: [ID!]
-}
-
-input TodoNameFilterComparison {
-  is: Boolean
-  like: String
-  in: [String!]
-}
-
-input TodoFilter {
-  and: [TodoFilter!]
-  or: [TodoFilter!]
-  id: TodoIdFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  name: TodoNameFilterComparison
-  done: BooleanFieldComparison
-  categoryId: IDFilterComparison
-  category: TodoFilterCategoryFilter
-}
-
-input TodoFilterCategoryFilter {
-  and: [TodoFilterCategoryFilter!]
-  or: [TodoFilterCategoryFilter!]
-  id: CategoryIdFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  name: CategoryNameFilterComparison
-}
-
-input TodoSort {
-  field: TodoSortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum TodoSortFields {
-  id
-  createdAt
-  updatedAt
-  name
-  done
-  categoryId
-}
-
-input CategoryFilter {
-  and: [CategoryFilter!]
-  or: [CategoryFilter!]
-  id: CategoryIdFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  name: CategoryNameFilterComparison
-}
-
-input CategorySort {
-  field: CategorySortFields!
-  direction: SortDirection!
-  nulls: SortNulls
-}
-
-enum CategorySortFields {
+enum OwnerEntitySortFields {
   id
   createdAt
   updatedAt
@@ -710,122 +321,16 @@ enum CategorySortFields {
 }
 
 type Mutation {
-  createOneUser(input: CreateOneUserInput!): User!
-  createManyUsers(input: CreateManyUsersInput!): [User!]!
-  updateOneUser(input: UpdateOneUserInput!): User!
-  updateManyUsers(input: UpdateManyUsersInput!): UpdateManyResponse!
-  deleteOneUser(input: DeleteOneUserInput!): UserDeleteResponse!
-  deleteManyUsers(input: DeleteManyUsersInput!): DeleteManyResponse!
-  setCategoryOnTodo(input: SetCategoryOnTodoInput!): Todo!
-  addSubTasksToTodo(input: AddSubTasksToTodoInput!): Todo!
-  setSubTasksOnTodo(input: SetSubTasksOnTodoInput!): Todo!
-  removeSubTasksFromTodo(input: RemoveSubTasksFromTodoInput!): Todo!
-  createOneTodo(input: CreateOneTodoInput!): Todo!
-  updateOneTodo(input: UpdateOneTodoInput!): Todo!
-  deleteOneTodo(input: DeleteOneTodoInput!): TodoDeleteResponse!
-  setCategoryOnSubTask(input: SetCategoryOnSubTaskInput!): SubTask!
-  createOneSubTask(input: CreateOneSubTaskInput!): SubTask!
-  updateOneSubTask(input: UpdateOneSubTaskInput!): SubTask!
-  deleteOneSubTask(input: DeleteOneSubTaskInput!): SubTaskDeleteResponse!
-  createOneCategory(input: CreateOneCategoryInput!): Category!
-  updateOneCategory(input: UpdateOneCategoryInput!): Category!
-  deleteOneCategory(input: DeleteOneCategoryInput!): CategoryDeleteResponse!
+  setEntityOnLink(input: SetEntityOnLinkInput!): Link!
+  createOneLink(input: CreateOneLinkInput!): Link!
+  updateOneLink(input: UpdateOneLinkInput!): Link!
+  deleteOneLink(input: DeleteOneLinkInput!): LinkDeleteResponse!
+  createOneOwnerEntity(input: CreateOneOwnerEntityInput!): OwnerEntity!
+  updateOneOwnerEntity(input: UpdateOneOwnerEntityInput!): OwnerEntity!
+  deleteOneOwnerEntity(input: DeleteOneOwnerEntityInput!): OwnerEntityDeleteResponse!
 }
 
-input CreateOneUserInput {
-  """The record to create"""
-  user: CreateUser!
-}
-
-input CreateUser {
-  """User name"""
-  name: String!
-
-  """User email"""
-  email: String!
-
-  """User entity"""
-  entity: String!
-
-  """User role"""
-  role: String!
-}
-
-input CreateManyUsersInput {
-  """Array of records to create"""
-  users: [CreateUser!]!
-}
-
-input UpdateOneUserInput {
-  """The id of the record to update"""
-  id: ID!
-
-  """The update to apply."""
-  update: UpdateUser!
-}
-
-input UpdateUser {
-  """User name"""
-  name: String
-
-  """User email"""
-  email: String
-
-  """User AIESEC email"""
-  aiesecEmail: String
-
-  """User entity"""
-  entity: String
-
-  """User role"""
-  role: String
-}
-
-input UpdateManyUsersInput {
-  """Filter used to find fields to update"""
-  filter: UserUpdateFilter!
-
-  """The update to apply to all records found using the filter"""
-  update: UpdateUser!
-}
-
-input UserUpdateFilter {
-  and: [UserUpdateFilter!]
-  or: [UserUpdateFilter!]
-  id: UserIdFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  name: UserNameFilterComparison
-  email: UserEmailFilterComparison
-  aiesecEmail: UserAiesecEmailFilterComparison
-  entity: UserEntityFilterComparison
-  role: UserRoleFilterComparison
-}
-
-input DeleteOneUserInput {
-  """The id of the record to delete."""
-  id: ID!
-}
-
-input DeleteManyUsersInput {
-  """Filter to find records to delete"""
-  filter: UserDeleteFilter!
-}
-
-input UserDeleteFilter {
-  and: [UserDeleteFilter!]
-  or: [UserDeleteFilter!]
-  id: UserIdFilterComparison
-  createdAt: DateFieldComparison
-  updatedAt: DateFieldComparison
-  name: UserNameFilterComparison
-  email: UserEmailFilterComparison
-  aiesecEmail: UserAiesecEmailFilterComparison
-  entity: UserEntityFilterComparison
-  role: UserRoleFilterComparison
-}
-
-input SetCategoryOnTodoInput {
+input SetEntityOnLinkInput {
   """The id of the record."""
   id: ID!
 
@@ -833,144 +338,66 @@ input SetCategoryOnTodoInput {
   relationId: ID!
 }
 
-input AddSubTasksToTodoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
-}
-
-input SetSubTasksOnTodoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
-}
-
-input RemoveSubTasksFromTodoInput {
-  """The id of the record."""
-  id: ID!
-
-  """The ids of the relations."""
-  relationIds: [ID!]!
-}
-
-input CreateOneTodoInput {
+input CreateOneLinkInput {
   """The record to create"""
-  todo: CreateTodo!
+  link: CreateLink!
 }
 
-input CreateTodo {
-  """Todo name"""
+input CreateLink {
+  """Link  name"""
   name: String!
-
-  """Todo description"""
-  description: String!
-  categoryId: ID
+  actualUrl: String!
+  redirectUrl: String!
+  entityId: ID!
 }
 
-input UpdateOneTodoInput {
+input UpdateOneLinkInput {
   """The id of the record to update"""
   id: ID!
 
   """The update to apply."""
-  update: UpdateTodo!
+  update: UpdateLink!
 }
 
-input UpdateTodo {
-  """Todo name"""
+input UpdateLink {
+  """Link  name"""
   name: String
-
-  """Todo done"""
-  done: Boolean
-
-  """Todo description"""
-  description: String
-  categoryId: ID
+  actualUrl: String
+  redirectUrl: String
+  entityId: ID
+  approved: Boolean
+  createdBy: String
 }
 
-input DeleteOneTodoInput {
+input DeleteOneLinkInput {
   """The id of the record to delete."""
   id: ID!
 }
 
-input SetCategoryOnSubTaskInput {
-  """The id of the record."""
-  id: ID!
-
-  """The id of relation."""
-  relationId: ID!
-}
-
-input CreateOneSubTaskInput {
+input CreateOneOwnerEntityInput {
   """The record to create"""
-  subTask: CreateSubTask!
+  ownerEntity: CreateOwnerEntity!
 }
 
-input CreateSubTask {
-  """SubTask name"""
+input CreateOwnerEntity {
+  """Owner Entity"""
   name: String!
-
-  """SubTask description"""
-  description: String!
-  todoId: ID!
-  categoryId: String
 }
 
-input UpdateOneSubTaskInput {
+input UpdateOneOwnerEntityInput {
   """The id of the record to update"""
   id: ID!
 
   """The update to apply."""
-  update: UpdateSubTask!
+  update: UpdateOwnerEntity!
 }
 
-input UpdateSubTask {
-  """SubTask name"""
+input UpdateOwnerEntity {
+  """Owner Entity"""
   name: String
-
-  """SubTask done"""
-  done: Boolean
-
-  """SubTask description"""
-  description: String
-  todoId: ID
-  categoryId: String
 }
 
-input DeleteOneSubTaskInput {
-  """The id of the record to delete."""
-  id: ID!
-}
-
-input CreateOneCategoryInput {
-  """The record to create"""
-  category: CreateCategory!
-}
-
-input CreateCategory {
-  """Category name"""
-  name: String!
-  description: String
-}
-
-input UpdateOneCategoryInput {
-  """The id of the record to update"""
-  id: ID!
-
-  """The update to apply."""
-  update: UpdateCategory!
-}
-
-input UpdateCategory {
-  """Category name"""
-  name: String
-  description: String
-}
-
-input DeleteOneCategoryInput {
+input DeleteOneOwnerEntityInput {
   """The id of the record to delete."""
   id: ID!
 }

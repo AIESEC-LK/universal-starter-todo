@@ -54,6 +54,7 @@
 		"graphql": "^16.5.0",
 		"graphql-subscriptions": "^2.0.0",
 		"mercurius": "^9.5.0",
+		"mongodb": "^4.13.0",
 		"mysql2": "^2.3.3",
 		"passport": "^0.5.3",
 		"pg": "^8.7.3",
@@ -131,4 +132,3 @@
 		"testEnvironment": "node"
 	}
 }
-

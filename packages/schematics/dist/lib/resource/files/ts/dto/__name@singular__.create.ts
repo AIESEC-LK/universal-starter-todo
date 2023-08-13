@@ -1,5 +1,6 @@
 import { InputType } from "@nestjs/graphql";
-import { CreateType } from "@vizorous/nest-query-utils";
+import { CreateType } from "src/_common/dto/mapped-types";
+
 import { <%= classify(name) %> } from "../entities/<%= singular(name)%>.entity";
 
 @InputType()
